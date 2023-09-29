@@ -7,8 +7,9 @@ const categories = await fetchCategories ()
 console.log(categories)
 
 function displayGallery(works) {
+    const gallery = document.querySelector(".gallery");
+    gallery.innerHTML="";
     for (let i=0; i < works.length; i++) {
-        const gallery = document.querySelector(".gallery");
         const figure = document.createElement("figure");
         const figcaption = document.createElement("figcaption");
         figcaption.textContent = works[i].title;
@@ -20,5 +21,24 @@ function displayGallery(works) {
         figure.appendChild(figcaption);
     }
 }
+
+function displayFilters(categories) {
+    const filter = document.querySelector(".filter");
+    const button = document.createElement("button");
+    button.textContent = "Tous";
+    button.addEventListener("click", ()=> {displayGallery(works)});
+    filter.appendChild(button);
+    for (let i=0; i < categories.length; i++) {
+        const button = document.createElement("button");
+        button.textContent = categories[i].name ;
+        button.addEventListener("click",()=>{
+            const filterWorks = works.filter( (work) => { return work.categoryId===categories[i].id});
+            console.log("coucou",filterWorks);
+            displayGallery(filterWorks);
+        })
+        filter.appendChild(button);
+    }
+}
+displayFilters(categories)
 
 displayGallery(works)
