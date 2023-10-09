@@ -39,6 +39,20 @@ function displayFilters(categories) {
         filter.appendChild(button);
     }
 }
-displayFilters(categories)
 
 displayGallery(works)
+
+function initEditMode () {
+    const authentificationToken = sessionStorage.getItem("authentificationToken");
+    if (authentificationToken){
+        const edit = document.querySelector(".editMode");
+        const button = document.createElement("button");
+        button.textContent = "Modifier";
+        edit.appendChild(button);
+    }
+    else {
+        displayFilters(categories)
+    }
+}
+
+initEditMode()
