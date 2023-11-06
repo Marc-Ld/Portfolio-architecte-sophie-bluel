@@ -1,5 +1,5 @@
 import {fetchWorks,fetchCategories} from "./API.js"
-
+import {initModal} from "./modal.js"
 const works = await fetchWorks()
 console.log(works) 
 
@@ -42,13 +42,18 @@ function displayFilters(categories) {
 
 displayGallery(works)
 
-function initEditMode () {
+function initEditMode() {
     const authentificationToken = sessionStorage.getItem("authentificationToken");
     if (authentificationToken){
         const edit = document.querySelector(".editMode");
         const button = document.createElement("button");
         button.textContent = "Modifier";
         edit.appendChild(button);
+        button.addEventListener("click" ,async()=> {
+            const modal = document.querySelector(".modal");
+            modal.classList.add("modalDisplay");
+            await initModal()
+        })
     }
     else {
         displayFilters(categories)
@@ -56,3 +61,22 @@ function initEditMode () {
 }
 
 initEditMode()
+
+function initCloseModal() {
+    const close = document.querySelector(".close");
+    close.addEventListener("click" , ()=>{
+        const title = document.querySelector(".modalTitle")
+        const displayGallery = document.querySelector(".modalGallery")
+        const line = document.querySelector(".line")
+        const modalButton = document.querySelector(".modalButton")
+        const modal = document.querySelector(".modal");
+        const addPhoto = document.querySelector(".modalAdd")
+        modal.classList.remove("modalDisplay");
+        displayGallery.classList.remove("modalGalleryOff")
+        line.classList.remove ("modalGalleryOff")
+        modalButton.classList.remove ("modalGalleryOff")
+        addPhoto.classList.remove("modalAddOn")
+    })
+}
+
+initCloseModal()

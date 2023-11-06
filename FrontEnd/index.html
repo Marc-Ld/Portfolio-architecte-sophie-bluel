@@ -9,10 +9,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
+	<script src="https://kit.fontawesome.com/d7611a791d.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
-	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
+	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a href="index.html">projets</a></li>
@@ -37,6 +38,31 @@
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
 		<div class="editMode"></div>
+		<div class="modal">
+			<div class="modalContent">
+				<button class="close">X</button>
+				<div class="modalTitle"></div>
+				<div class="modalGallery"></div>
+				<div class="modalAdd">
+					<section id="addProject">
+						<form>
+							<div class="custom__image-container">
+								<label id="add-img-label" for="add-single-img">+</label>
+								<input type="file" id="add-single-img" accept="image/jpeg" />
+							</div>
+							<label for="title">Titre</label>
+							<input type="text" id="title">
+							<label for="category">Categorie</label>
+							<input type="select" id="category">
+							<div class="lineForm"></div>
+							<input type="submit" value="Valider">
+						</form>
+					</section>
+				</div>
+				<div class="line"></div>
+				<button class="modalButton">Ajouter une photo</button>
+			</div>
+		</div>
 		<div class="filter"></div>
 		<div class="gallery"></div>
 	</section>
