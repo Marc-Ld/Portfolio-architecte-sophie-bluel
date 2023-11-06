@@ -45,6 +45,13 @@ displayGallery(works)
 function initEditMode() {
     const authentificationToken = sessionStorage.getItem("authentificationToken");
     if (authentificationToken){
+        const logout = document.querySelector(".aLogin")
+        logout.innerHTML = "logout"
+        logout.setAttribute ("href","")
+        logout.addEventListener("click", async()=> {
+            sessionStorage.removeItem("authentificationToken")
+            logout.innerHTML = "login"
+        })
         const edit = document.querySelector(".editMode");
         const button = document.createElement("button");
         button.textContent = "Modifier";
