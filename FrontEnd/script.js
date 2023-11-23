@@ -46,11 +46,11 @@ function initEditMode() {
     const authentificationToken = sessionStorage.getItem("authentificationToken");
     if (authentificationToken){
         const logout = document.querySelector(".aLogin")
-        logout.innerHTML = "logout"
+        logout.textContent = "logout"
         logout.setAttribute ("href","")
         logout.addEventListener("click", async()=> {
             sessionStorage.removeItem("authentificationToken")
-            logout.innerHTML = "login"
+            logout.textContent = "login"
         })
         const edit = document.querySelector(".editMode");
         const button = document.createElement("button");

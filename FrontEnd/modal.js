@@ -1,4 +1,4 @@
-import { fetchWorks } from "./API.js";
+import { fetchWorks,fetchCategories } from "./API.js";
 
 
 export function initModalTitle() {
@@ -14,9 +14,14 @@ function displayPhotos(works){
     galleryPhoto.innerHTML="";
     for (let i=0; i< works.length; i++){
         const image = document.createElement("img");
+        const deleteIcon = document.createElement("button")
         image.src = works[i].imageUrl;
         image.alt = works[i].title;
         galleryPhoto.appendChild(image);
+        //galleryPhoto.appendChild(deleteIcon);
+        deleteIcon.addEventListener("click", async()=>{
+            console.log(works[i].id)
+        })
     }
 }
 
@@ -39,9 +44,21 @@ function addPhoto(){
     })
 }
 
+function addCategoriesList(categories){
+    for (let i=0; i<categories.length; i++){
+        const option = document.createElement("option")
+        const categorySelect = document.getElementById("category")
+        option.value = categories[i].id
+        option.textContent = categories[i].name
+        categorySelect.appendChild(option)
+}
+}
+
 export async function initModal () {
     const works = await fetchWorks()
+    const categories  = await fetchCategories()
     initModalTitle()
     displayPhotos(works)
     addPhoto()
+    addCategoriesList(categories)
 }
