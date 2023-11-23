@@ -1,7 +1,10 @@
 import { fetchWorks,fetchCategories } from "./API.js";
 
+let projectImage ;
+let projectTitle ;
+let projectCategory ;
 
-export function initModalTitle() {
+function initModalTitle() {
     const modalContent = document.querySelector(".modalTitle");
     modalContent.innerHTML = "";
     const title = document.createElement("h2");
@@ -18,7 +21,7 @@ function displayPhotos(works){
         image.src = works[i].imageUrl;
         image.alt = works[i].title;
         galleryPhoto.appendChild(image);
-        //galleryPhoto.appendChild(deleteIcon);
+        galleryPhoto.appendChild(deleteIcon);
         deleteIcon.addEventListener("click", async()=>{
             console.log(works[i].id)
         })
@@ -27,10 +30,10 @@ function displayPhotos(works){
 
 function addPhoto(){
     const add = document.querySelector(".modalButton")
-    add.addEventListener ("click",async()=> {
+    add.addEventListener ("click",()=> {
         const modalContent = document.querySelector(".modalTitle")
         modalContent.innerHTML = "" ;
-        const title = document.createElement("h2")
+        const titleElement = document.createElement("h2")
         const galleryPhoto = document.querySelector(".modalGallery")
         const line = document.querySelector(".line")
         const modalButton = document.querySelector(".modalButton")
@@ -39,20 +42,102 @@ function addPhoto(){
         galleryPhoto.classList.add("modalGalleryOff")
         const addPhoto = document.querySelector(".modalAdd")
         addPhoto.classList.add("modalAddOn")
-        title.textContent = "Ajout Photo"
-        modalContent.appendChild(title)
+        titleElement.textContent = "Ajout Photo"
+        modalContent.appendChild(titleElement)
     })
 }
 
+const inputFile = document.querySelector("#add-single-img");
+const imgArea = document.querySelector(".img-area");
+
+
+inputFile.addEventListener("change", function () {
+	const image = this.files[0]
+	if(image.size < 4000000) {
+		const reader = new FileReader();
+		reader.onload = ()=> {
+			const allImg = imgArea.querySelectorAll("img");
+			allImg.forEach(item=> item.remove());
+			const imgUrl = reader.result;
+			const img = document.createElement("img");
+			img.src = imgUrl;
+			imgArea.appendChild(img);
+            img.classList.add("imported-img")
+			imgArea.classList.add('active');
+			imgArea.dataset.img = image.name;
+		}
+		reader.readAsDataURL(image);
+	} else {
+		alert("Image size more than 4MB");
+	}
+})
+
 function addCategoriesList(categories){
-    for (let i=0; i<categories.length; i++){
-        const option = document.createElement("option")
-        const categorySelect = document.getElementById("category")
-        option.value = categories[i].id
-        option.textContent = categories[i].name
-        categorySelect.appendChild(option)
+    const categorySelect = document.getElementById("category")
+    categorySelect.innerHTML="";
+        for (let i=0; i<categories.length; i++){
+            const option = document.createElement("option")
+            option.value = categories[i].id
+            option.textContent = categories[i].name
+            categorySelect.appendChild(option)
+    }
 }
+
+function initEventlistener() {
+    const title = document.getElementById("title")
+    const image = document.getElementById("add-single-img")
+    const category = document.getElementById("category")
+    title.addEventListener("change",(event)=>{
+        projectTitle = event.target.value
+    })
+    image.addEventListener("change",(event)=>{
+        projectImage = event.target.value
+    })
+    category.addEventListener("change",(event) =>{
+        projectCategory = event.target.value
+    })
+
 }
+
+async function addProject(){
+    const form = document.getElementById("form")
+    const UserId = sessionStorage.getItem("authentificationToken");
+    form.addEventListener("submit",async(event)=>{
+        event.preventDefault()
+        if (projectImage!=="" && projectTitle!=="" && projectCategory!=="") {
+        const dataProject = {
+            image: projectImage,
+            title: projectTitle,
+            category: projectCategory,
+        }
+        console.log(dataProject)
+            try {
+                const response = await fetch ("http://localhost:5678/api/works",{
+                    method: "POST",
+                    body : dataProject,
+                    headers: {
+                        Authorization: `Bearer ${UserId}`,
+                    },
+                })
+                if (response.ok) {
+                    alert("Projet envoyé!")
+                    initModalTitle()
+                    displayPhotos(works)
+                    displayGallery(works)
+                } else {
+                    alert("Erreur")
+                }
+            } catch(error){
+                console.error(error)
+            }
+        } else {
+            alert("Veuillez sélectionner une image, un tire et une catégorie")
+        }
+        
+    })
+}
+
+
 
 export async function initModal () {
     const works = await fetchWorks()
@@ -61,4 +146,6 @@ export async function initModal () {
     displayPhotos(works)
     addPhoto()
     addCategoriesList(categories)
+    initEventlistener()
+    addProject()
 }

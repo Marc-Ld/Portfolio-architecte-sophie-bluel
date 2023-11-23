@@ -1,10 +1,10 @@
 import {fetchWorks,fetchCategories} from "./API.js"
 import {initModal} from "./modal.js"
 const works = await fetchWorks()
-console.log(works) 
+
 
 const categories = await fetchCategories ()
-console.log(categories)
+
 
 function displayGallery(works) {
     const gallery = document.querySelector(".gallery");
@@ -54,8 +54,11 @@ function initEditMode() {
         })
         const edit = document.querySelector(".editMode");
         const button = document.createElement("button");
-        button.textContent = "Modifier";
+        const icon = document.createElement("i");
+        icon.setAttribute("class","fa-regular fa-pen-to-square");
+        button.textContent = "modifier" ;
         edit.appendChild(button);
+        button.appendChild(icon);
         button.addEventListener("click" ,async()=> {
             const modal = document.querySelector(".modal");
             modal.classList.add("modalDisplay");
@@ -78,12 +81,20 @@ function initCloseModal() {
         const modalButton = document.querySelector(".modalButton")
         const modal = document.querySelector(".modal");
         const addPhoto = document.querySelector(".modalAdd")
+        const form = document.querySelector("#form")
+        const image = document.querySelector(".img-area")
         modal.classList.remove("modalDisplay");
         displayGallery.classList.remove("modalGalleryOff")
         line.classList.remove ("modalGalleryOff")
         modalButton.classList.remove ("modalGalleryOff")
         addPhoto.classList.remove("modalAddOn")
+        image.innerHTML = ""
+        image.classList.remove ("active")
+        form.reset()
     })
 }
 
 initCloseModal()
+
+
+
