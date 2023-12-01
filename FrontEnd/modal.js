@@ -1,4 +1,5 @@
 import { fetchWorks,fetchCategories } from "./API.js";
+import { displayGallery } from "./script.js"
 
 let projectImage ;
 let projectTitle ;
@@ -41,7 +42,10 @@ function displayPhotos(works){
                     }
                 });
                 if (response.ok){
+                    const works = await fetchWorks()
+                    initModalTitle()
                     displayPhotos(works)
+                    displayGallery(works)
                 } else {
                     alert("Erreur lors de la supression")
                 }
@@ -53,13 +57,12 @@ function displayPhotos(works){
     }
 }
 
-
+const prev = document.querySelector(".previous")
 
 function addPhoto(){
     const add = document.querySelector(".modalButton")
     add.addEventListener ("click",()=> {
         const modalContent = document.querySelector(".modalTitle")
-        const prev = document.querySelector(".previous")
         modalContent.innerHTML = "" ;
         const titleElement = document.createElement("h2")
         const galleryPhoto = document.querySelector(".modalGallery")
@@ -86,6 +89,7 @@ function addPhoto(){
         previous()
     })
 }
+
 
 const inputFile = document.querySelector("#add-single-img");
 const imgArea = document.querySelector(".img-area");
@@ -160,9 +164,13 @@ async function addProject(){
                     },
                 })
                 if (response.ok) {
-                    initModalTitle()
+                    const works =  await fetchWorks()
                     displayPhotos(works)
                     displayGallery(works)
+                    const image = document.querySelector(".img-area")
+                    image.innerHTML = ""
+                    image.classList.remove ("active")
+                    form.reset()
                 } else {
                     alert("Erreur")
                 }

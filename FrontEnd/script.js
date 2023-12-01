@@ -1,12 +1,10 @@
 import {fetchWorks,fetchCategories} from "./API.js"
 import {initModal} from "./modal.js"
 const works = await fetchWorks()
-
-
 const categories = await fetchCategories ()
 
 
-function displayGallery(works) {
+export async function displayGallery(works) {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML="";
     for (let i=0; i < works.length; i++) {
