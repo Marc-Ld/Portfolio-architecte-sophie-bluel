@@ -18,16 +18,20 @@ function displayPhotos(works){
     const galleryPhoto = document.querySelector(".modalGallery")
     galleryPhoto.innerHTML="";
     for (let i=0; i< works.length; i++){
+        const figure = document.createElement("figure")
         const image = document.createElement("img");
         const deleteIcon = document.createElement("button")
         image.src = works[i].imageUrl;
         image.alt = works[i].title;
-        galleryPhoto.appendChild(image);
-        galleryPhoto.appendChild(deleteIcon);
+        galleryPhoto.appendChild(figure);
+        figure.appendChild(image)
+        figure.appendChild(deleteIcon);
+        figure.classList.add("figure")
+        deleteIcon.classList.add("BtnDelete","fa-solid", "fa-trash-can", "fa-xs")
         deleteIcon.addEventListener("click", async(event)=>{
+            event.preventDefault()
             console.log(works[i].id)
             const UserId = sessionStorage.getItem("authentificationToken")
-            
             try {
                 const response = await fetch(`http://localhost:5678/api/works/${works[i].id}`,
                 {
@@ -44,6 +48,7 @@ function displayPhotos(works){
             } catch (error){
                 console.error("Erreur lors de la suppression")
             }
+            event.preventDefault()
         })
     }
 }

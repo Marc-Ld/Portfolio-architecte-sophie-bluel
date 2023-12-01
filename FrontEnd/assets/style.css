@@ -383,10 +383,14 @@ footer nav ul {
 	justify-self: center;
 }
 
+.figure {
+	position: relative;
+}
+
 .BtnDelete {
 	position: absolute;
 	top: 6px;
-	right: 5px;
+	right: 10px;
 	z-index: 3;
 	background-color: #000000;
 	border: none;
