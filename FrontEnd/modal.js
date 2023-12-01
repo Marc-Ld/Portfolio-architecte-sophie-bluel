@@ -10,6 +10,8 @@ function initModalTitle() {
     const title = document.createElement("h2");
     title.textContent = "Galerie Photo"
     modalContent.appendChild(title);
+    const prev = document.querySelector(".previous")
+    prev.classList.add("modalGalleryOff")
 }
 
 function displayPhotos(works){
@@ -22,16 +24,37 @@ function displayPhotos(works){
         image.alt = works[i].title;
         galleryPhoto.appendChild(image);
         galleryPhoto.appendChild(deleteIcon);
-        deleteIcon.addEventListener("click", async()=>{
+        deleteIcon.addEventListener("click", async(event)=>{
             console.log(works[i].id)
+            const UserId = sessionStorage.getItem("authentificationToken")
+            
+            try {
+                const response = await fetch(`http://localhost:5678/api/works/${works[i].id}`,
+                {
+                    method : "DELETE",
+                    headers : {
+                        Authorization : `Bearer ${UserId}`,
+                    }
+                });
+                if (response.ok){
+                    displayPhotos(works)
+                } else {
+                    alert("Erreur lors de la supression")
+                }
+            } catch (error){
+                console.error("Erreur lors de la suppression")
+            }
         })
     }
 }
+
+
 
 function addPhoto(){
     const add = document.querySelector(".modalButton")
     add.addEventListener ("click",()=> {
         const modalContent = document.querySelector(".modalTitle")
+        const prev = document.querySelector(".previous")
         modalContent.innerHTML = "" ;
         const titleElement = document.createElement("h2")
         const galleryPhoto = document.querySelector(".modalGallery")
@@ -44,6 +67,18 @@ function addPhoto(){
         addPhoto.classList.add("modalAddOn")
         titleElement.textContent = "Ajout Photo"
         modalContent.appendChild(titleElement)
+        prev.classList.remove ("modalGalleryOff")
+        function previous(){
+            prev.addEventListener("click",()=> {
+                line.classList.remove("modalGalleryOff")
+                modalButton.classList.remove ("modalGalleryOff")
+                galleryPhoto.classList.remove("modalGalleryOff")
+                addPhoto.classList.remove("modalAddOn")
+                titleElement.textContent = "Photos"
+                prev.classList.add("modalGalleryOff")
+            })
+        }
+        previous()
     })
 }
 
@@ -91,7 +126,7 @@ function initEventlistener() {
         projectTitle = event.target.value
     })
     image.addEventListener("change",(event)=>{
-        projectImage = event.target.value
+        projectImage = event.target.files[0]
     })
     category.addEventListener("change",(event) =>{
         projectCategory = event.target.value
@@ -99,28 +134,27 @@ function initEventlistener() {
 
 }
 
+
 async function addProject(){
     const form = document.getElementById("form")
     const UserId = sessionStorage.getItem("authentificationToken");
     form.addEventListener("submit",async(event)=>{
         event.preventDefault()
         if (projectImage!=="" && projectTitle!=="" && projectCategory!=="") {
-        const dataProject = {
-            image: projectImage,
-            title: projectTitle,
-            category: projectCategory,
-        }
-        console.log(dataProject)
+            const formData = new FormData();
+            formData.append("title", projectTitle);
+            formData.append("image", projectImage);
+            formData.append("category", projectCategory);
+            console.log(projectImage)
             try {
                 const response = await fetch ("http://localhost:5678/api/works",{
                     method: "POST",
-                    body : dataProject,
+                    body : formData,
                     headers: {
                         Authorization: `Bearer ${UserId}`,
                     },
                 })
                 if (response.ok) {
-                    alert("Projet envoyé!")
                     initModalTitle()
                     displayPhotos(works)
                     displayGallery(works)

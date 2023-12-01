@@ -252,6 +252,8 @@ footer nav ul {
 	margin: 2em
 }
 
+
+
 /** log in page **/
 
 .login {
@@ -385,7 +387,7 @@ footer nav ul {
 	position: absolute;
 	top: 6px;
 	right: 5px;
-	z-index: 1;
+	z-index: 3;
 	background-color: #000000;
 	border: none;
 	color: #ffffff;
@@ -414,6 +416,20 @@ footer nav ul {
 	margin-left: 5px;
 	cursor: pointer;
 }
+
+.previous {
+	position: absolute;
+	align-items: start;
+	top: 30px;
+	left: 30px;
+	border: none;
+	background-color: white;
+}
+
+.previous:hover{
+	cursor: pointer;
+}
+
 .close {
 	position: absolute;
 	align-items: end;
